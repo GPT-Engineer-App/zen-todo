@@ -9,9 +9,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import { CircleUser, Menu, Package2 } from "lucide-react";
+import { CircleUser, Menu, Package2, Plus, ChevronDown } from "lucide-react";
 import { NavLink, Outlet } from "react-router-dom";
 import { navItems } from "../App";
+import { useState } from "react";
 
 const Layout = () => {
   return (
@@ -31,28 +32,54 @@ const Layout = () => {
   );
 };
 
-const Sidebar = () => (
-  <div className="hidden border-r bg-muted/40 md:block">
-    <div className="flex h-full max-h-screen flex-col gap-2">
-      <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
-        <NavLink to="/" className="flex items-center gap-2 font-semibold">
-          <Package2 className="h-6 w-6" />
-          <span>Acme Inc</span>
-        </NavLink>
-      </div>
-      <div className="flex-1">
-        <nav className="grid items-start px-2 text-sm font-medium lg:px-4 gap-2">
-          {navItems.map((item) => (
-            <SidebarNavLink key={item.to} to={item.to}>
-              {item.icon}
-              {item.title}
-            </SidebarNavLink>
-          ))}
-        </nav>
+const Sidebar = () => {
+  const [projectsOpen, setProjectsOpen] = useState(false);
+
+  return (
+    <div className="hidden border-r bg-muted/40 md:block">
+      <div className="flex h-full max-h-screen flex-col gap-2">
+        <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
+          <NavLink to="/" className="flex items-center gap-2 font-semibold">
+            <Package2 className="h-6 w-6" />
+            <span>Todo App</span>
+          </NavLink>
+        </div>
+        <div className="flex-1">
+          <nav className="grid items-start px-2 text-sm font-medium lg:px-4 gap-2">
+            {navItems.map((item) => (
+              <SidebarNavLink key={item.to} to={item.to}>
+                {item.icon}
+                {item.title}
+              </SidebarNavLink>
+            ))}
+            <div className="mt-4">
+              <button
+                className="flex items-center gap-2 w-full text-left"
+                onClick={() => setProjectsOpen(!projectsOpen)}
+              >
+                <ChevronDown className={`h-4 w-4 transition-transform ${projectsOpen ? "rotate-180" : ""}`} />
+                Projects
+              </button>
+              {projectsOpen && (
+                <div className="mt-2 pl-6">
+                  {/* Example Project */}
+                  <SidebarNavLink to="/project/1">
+                    <span className="mr-2">📁</span>
+                    Project 1
+                  </SidebarNavLink>
+                  <button className="flex items-center gap-2 mt-2 text-primary">
+                    <Plus className="h-4 w-4" />
+                    Add Project
+                  </button>
+                </div>
+              )}
+            </div>
+          </nav>
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 const MobileSidebar = () => (
   <Sheet>
@@ -69,7 +96,7 @@ const MobileSidebar = () => (
           className="flex items-center gap-2 text-lg font-semibold mb-4"
         >
           <Package2 className="h-6 w-6" />
-          <span className="sr-only">Acme Inc</span>
+          <span className="sr-only">Todo App</span>
         </NavLink>
         {navItems.map((item) => (
           <SidebarNavLink key={item.to} to={item.to}>
